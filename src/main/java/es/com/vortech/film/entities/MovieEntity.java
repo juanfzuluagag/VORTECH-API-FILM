@@ -1,30 +1,40 @@
 package es.com.vortech.film.entities;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@ApiModel(description = "Detalles de la película")
 public class MovieEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int Id;
+    @ApiModelProperty(notes = "ID es autogenerado, tipo entero")
+    private int id;
+    @ApiModelProperty(notes = "Título es obligatorio")
     private String title;
+    @ApiModelProperty(notes = "Género es obligatorio")
     private String genre;
+    @ApiModelProperty(notes = "Año es obligatorio. El año de expedición de la pelicula debe ser mayor a 1990")
+    @Min(value = 1990, message = "El año de expedición de la pelicula debe ser mayor a 1990")
     private int year;
+    @ApiModelProperty(notes = "Numero de Oscars ganaos es obligatorio")
     private int oscarsWonNumber;
-
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
             })
-    @JoinTable(name = "film_data_actors",
-            joinColumns = { @JoinColumn(name = "film_film_id") },
+    @JoinTable(name = "movie_data_actor",
+            joinColumns = { @JoinColumn(name = "movie_id") },
             inverseJoinColumns = { @JoinColumn(name = "actor_id") })
-    @JsonManagedReference
-    private Set<ActorEntity> actors;
+    private Set<ActorEntity> actors = new HashSet<>();
 
     public MovieEntity() {
     }
@@ -37,7 +47,7 @@ public class MovieEntity {
     }
 
     public MovieEntity(int id, String title, String genre, int year, int oscarsWonNumber, Set<ActorEntity> actors) {
-        Id = id;
+        this.id = id;
         this.title = title;
         this.genre = genre;
         this.year = year;
@@ -46,11 +56,11 @@ public class MovieEntity {
     }
 
     public int getId() {
-        return Id;
+        return id;
     }
 
     public void setId(int id) {
-        Id = id;
+        id = id;
     }
 
     public String getTitle() {

@@ -5,20 +5,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Entity
-public class ActorEntity {
+public class ActorEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String name;
     private String nickName;
-    @JsonIgnore
-    @NotNull(message = "La lista moviesId debe estar presente")
-    private int[] moviesId;
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.PERSIST,
@@ -73,13 +71,5 @@ public class ActorEntity {
 
     public void setFilms(Set<MovieEntity> films) {
         this.films = films;
-    }
-
-    public int[] getMoviesId() {
-        return moviesId;
-    }
-
-    public void setMoviesId(int[] moviesId) {
-        this.moviesId = moviesId;
     }
 }
