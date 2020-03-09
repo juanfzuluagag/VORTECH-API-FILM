@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
@@ -21,12 +23,17 @@ public class MovieController {
     @PostMapping
     @ApiOperation(value = "Guardar película asociado a una lista de actores YA CREADOS")
     public ResponseEntity createNewMovie(
-            @ApiParam(value = "Arreglo de IDs asociados Actores: actorsIds=1,2...", required = true) @RequestParam int[] actorsIds,
+            @ApiParam(value = "Arreglo de IDs asociados Actores: actorsIds=1,2...", required = true) @Valid @NotNull int[] actorsIds,
             @ApiParam(value = "Objeto tipo Movie, no es necesario ingresar Objetos tipo Actores, con actorsIds se creará la relación automaticamente", required = true) @Valid @RequestBody MovieEntity newMovieEntity){
         return movieService.createNewMovie(actorsIds, newMovieEntity);
     }
     @GetMapping
-    public List<MovieEntity> getAllMovies(){
-        return movieService.findAll();
+    public ResponseEntity<Object> getAllMovies(){
+        return movieService.getAllMoviesWithTitleAndYear();
+    }
+
+    @GetMapping(path = "/{idMovie}")
+    public ResponseEntity<Object> getMovieById(@PathVariable int idMovie){
+        return movieService.getMovieById(idMovie);
     }
 }
