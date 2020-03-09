@@ -1,4 +1,4 @@
-package es.com.vortech.film.configuration;
+package es.com.vortech.film.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

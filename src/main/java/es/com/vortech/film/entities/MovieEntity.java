@@ -18,12 +18,16 @@ public class MovieEntity {
     @ApiModelProperty(notes = "ID es autogenerado, tipo entero")
     private int id;
     @ApiModelProperty(notes = "Título es obligatorio")
+    @NotNull(message = "Título de la película debe estar presente")
     private String title;
     @ApiModelProperty(notes = "Género es obligatorio")
+    @NotNull(message = "Genero de la pelicula debe estar presente")
     private String genre;
     @ApiModelProperty(notes = "Año es obligatorio. El año de expedición de la pelicula debe ser mayor a 1990")
+    @NotNull(message = "El año de estreno debe estar presente")
     @Min(value = 1990, message = "El año de expedición de la pelicula debe ser mayor a 1990")
     private int year;
+    @NotNull(message = "Número de Oscar ganados debe estar presente")
     @ApiModelProperty(notes = "Numero de Oscars ganaos es obligatorio")
     private int oscarsWonNumber;
     @ManyToMany(fetch = FetchType.LAZY,

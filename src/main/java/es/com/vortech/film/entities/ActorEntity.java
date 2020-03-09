@@ -14,8 +14,10 @@ import java.util.Set;
 public class ActorEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonIgnore
     private int id;
     private String name;
+    @JsonIgnore
     private String nickName;
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
