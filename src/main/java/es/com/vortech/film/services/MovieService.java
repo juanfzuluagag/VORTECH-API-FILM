@@ -18,6 +18,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static es.com.vortech.film.message.GeneralMessage.GeneralMsg.*;
+
 @RequiredArgsConstructor
 public class MovieService {
 
@@ -30,7 +32,7 @@ public class MovieService {
     public ResponseEntity<Object> getAllMoviesWithTitleAndYear(){
         responseModel = new ResponseModel();
         implementGetAllMoviesWithtitleAndYear();
-        return new ResponseEntity<>(responseModel, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(responseModel, httpStatus);
     }
 
     public ResponseEntity<Object> createNewMovie(int[] actorsId, MovieEntity newMovieEntity){
@@ -40,7 +42,7 @@ public class MovieService {
         }else{
             httpStatus = HttpStatus.BAD_REQUEST;
             responseModel.setData(ErrorModel.builder()
-                    .errorMessage("No se encuentra actorsId")
+                    .errorMessage(NO_FOUND_ACTORSIDS.getMessage())
                     .date(LocalDateTime.now())
                     .build());
         }
@@ -56,12 +58,12 @@ public class MovieService {
     private void implementGetMovieById(int idMovie){
         MovieEntity movieEntity = movieRepository.findById(idMovie);
         if(movieEntity != null){
-            httpStatus = HttpStatus.FOUND;
+            httpStatus = HttpStatus.ACCEPTED;
             responseModel.setData(movieEntity);
         }else{
             httpStatus = HttpStatus.NOT_FOUND;
             responseModel.setData(ErrorModel.builder()
-                    .errorMessage("Película no encontrad: " + idMovie)
+                    .errorMessage(String.format(NOT_FOUND_MOVIEID.getMessage(), idMovie))
                     .date(LocalDateTime.now())
                     .build());
         }
@@ -69,11 +71,7 @@ public class MovieService {
 
     private void implementGetAllMoviesWithtitleAndYear(){
         List<MovieTitleYearModel> movieEntities = convertFromEntityToDTO();
-        if(movieEntities.isEmpty()){
-            httpStatus = HttpStatus.NOT_FOUND;
-        }else {
-            httpStatus = HttpStatus.ACCEPTED;
-        }
+        httpStatus = HttpStatus.ACCEPTED;
         responseModel.setData(movieEntities);
     }
 
@@ -91,12 +89,13 @@ public class MovieService {
     private void implementCreateNewMovie(int[] actorsId, MovieEntity movieEntity){
         if(actorsId.length != 0){
             if(validateAllActors(actorsId).isEmpty()){
+                httpStatus = HttpStatus.CREATED;
                 responseModel.setData(insertActorsOnMovie(actorsId, saveMovieEntity(movieEntity)));
             }
         }else{
             httpStatus = HttpStatus.BAD_REQUEST;
             responseModel.setData(ErrorModel.builder()
-                    .errorMessage("ActorsId no puede estar vacio")
+                    .errorMessage(EMPTY_ACTORSIDS.getMessage())
                     .date(LocalDateTime.now())
                     .build());
         }
@@ -108,11 +107,9 @@ public class MovieService {
     }
 
     private MovieEntity insertActorsOnMovie(int[] actorsId, MovieEntity movieEntity){
-
         Arrays.stream(actorsId).forEach(actorId ->{
             ActorEntity relatedActor = actorRepository.findById(actorId);
             relatedActor.getFilms().add(movieEntity);
-            movieEntity.getActors();
             movieEntity.getActors().add(relatedActor);
         });
         return saveMovieEntity(movieEntity);
@@ -123,7 +120,7 @@ public class MovieService {
         Arrays.stream(actorsId).forEach(actorId ->{if(actorRepository.findById(actorId) == null ){badActorsId.add(actorId);}});
         if(!badActorsId.isEmpty()){
             responseModel.setData(ErrorModel.builder()
-                            .errorMessage("Veriicar los IDs de actores enviados: " + badActorsId.toString())
+                            .errorMessage(String.format(VERIFY_ACTORS_ID.getMessage(),badActorsId.toString()))
                             .date(LocalDateTime.now())
                             .build());
             httpStatus = HttpStatus.NOT_FOUND;
