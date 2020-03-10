@@ -41,6 +41,7 @@ public class MovieEntity {
     private Set<ActorEntity> actors = new HashSet<>();
 
     public MovieEntity() {
+        actors = new HashSet<>();
     }
 
     public MovieEntity(String title, String genre, int year, int oscarsWonNumber) {
@@ -48,6 +49,7 @@ public class MovieEntity {
         this.genre = genre;
         this.year = year;
         this.oscarsWonNumber = oscarsWonNumber;
+        actors = new HashSet<>();
     }
 
     public MovieEntity(int id, String title, String genre, int year, int oscarsWonNumber, Set<ActorEntity> actors) {

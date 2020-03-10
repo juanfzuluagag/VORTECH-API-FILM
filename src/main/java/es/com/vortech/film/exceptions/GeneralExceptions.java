@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static es.com.vortech.film.message.GeneralMessage.GeneralMsg.VERIFY_FIELDS;
+
 @ControllerAdvice
 public class GeneralExceptions extends ResponseEntityExceptionHandler {
     ResponseModel responseModel;
@@ -38,7 +40,7 @@ public class GeneralExceptions extends ResponseEntityExceptionHandler {
             HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         responseModel.setData(
                 ErrorModel.builder()
-                    .errorMessage("Verificar los campos suministrados")
+                    .errorMessage(VERIFY_FIELDS.getMessage())
                     .date(LocalDateTime.now())
                 .build());
         return new ResponseEntity<>(responseModel, HttpStatus.BAD_REQUEST);
