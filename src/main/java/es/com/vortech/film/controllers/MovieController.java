@@ -1,25 +1,22 @@
 package es.com.vortech.film.controllers;
 
-import es.com.vortech.film.entities.ActorEntity;
 import es.com.vortech.film.entities.MovieEntity;
 import es.com.vortech.film.services.MovieService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 @RestController
 @RequestMapping(path = "/movies", produces = MediaType.APPLICATION_JSON_VALUE)
+@AllArgsConstructor
 public class MovieController {
-    @Autowired
-    private MovieService movieService;
+    private final MovieService movieService;
     @PostMapping
     @ApiOperation(value = "Guardar película asociado a una lista de actores YA CREADOS")
     public ResponseEntity createNewMovie(

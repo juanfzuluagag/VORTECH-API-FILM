@@ -56,7 +56,7 @@ public class MovieService {
     private void implementGetMovieById(int idMovie){
         MovieEntity movieEntity = movieRepository.findById(idMovie);
         if(movieEntity != null){
-            httpStatus = HttpStatus.FOUND;
+            httpStatus = HttpStatus.ACCEPTED;
             responseModel.setData(movieEntity);
         }else{
             httpStatus = HttpStatus.NOT_FOUND;
@@ -69,11 +69,7 @@ public class MovieService {
 
     private void implementGetAllMoviesWithtitleAndYear(){
         List<MovieTitleYearModel> movieEntities = convertFromEntityToDTO();
-        if(movieEntities.isEmpty()){
-            httpStatus = HttpStatus.NOT_FOUND;
-        }else {
-            httpStatus = HttpStatus.ACCEPTED;
-        }
+        httpStatus = HttpStatus.ACCEPTED;
         responseModel.setData(movieEntities);
     }
 
@@ -91,6 +87,7 @@ public class MovieService {
     private void implementCreateNewMovie(int[] actorsId, MovieEntity movieEntity){
         if(actorsId.length != 0){
             if(validateAllActors(actorsId).isEmpty()){
+                httpStatus = HttpStatus.CREATED;
                 responseModel.setData(insertActorsOnMovie(actorsId, saveMovieEntity(movieEntity)));
             }
         }else{
@@ -108,11 +105,9 @@ public class MovieService {
     }
 
     private MovieEntity insertActorsOnMovie(int[] actorsId, MovieEntity movieEntity){
-
         Arrays.stream(actorsId).forEach(actorId ->{
             ActorEntity relatedActor = actorRepository.findById(actorId);
             relatedActor.getFilms().add(movieEntity);
-            movieEntity.getActors();
             movieEntity.getActors().add(relatedActor);
         });
         return saveMovieEntity(movieEntity);
