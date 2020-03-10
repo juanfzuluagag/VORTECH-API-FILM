@@ -92,7 +92,7 @@ Servicios REST API-VORTECH-FILM, se compone de los siguientes servicios
     ]
 }
 
-## Get a specific Thing
+## Obtener una película especifica
 ###PathVariable
 ` /{movieId} :  Parámetro asociado al ID de la película`
 ### Request
